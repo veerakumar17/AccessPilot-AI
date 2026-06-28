@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Globe, Calendar, Trash2, Play, ArrowRight, History } from 'lucide-react';
+import { Plus, Search, Globe, Calendar, Trash2, Play, History } from 'lucide-react';
 import Card from '../components/ui/Card';
 import Modal from '../components/ui/Modal';
 import EmptyState from '../components/ui/EmptyState';

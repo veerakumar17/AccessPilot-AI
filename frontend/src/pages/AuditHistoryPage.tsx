@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Eye, Loader2, CheckCircle, XCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Search, Eye, Loader2, CheckCircle, XCircle, Clock } from 'lucide-react';
 import Card from '../components/ui/Card';
 import EmptyState from '../components/ui/EmptyState';
 import { TableSkeleton } from '../components/ui/LoadingSkeleton';
