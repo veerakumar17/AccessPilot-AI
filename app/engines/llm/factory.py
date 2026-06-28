@@ -1,6 +1,6 @@
 """
 LLM provider factory.
-Switching providers requires only changing LLM_PROVIDER in .env.
+AccessPilot AI uses Groq as the primary LLM provider.
 """
 from __future__ import annotations
 
@@ -36,36 +36,12 @@ class _LLMClientSingleton:
 
 def create_llm_client() -> LLMClient:
     """
-    Creates the appropriate LLM client based on LLM_PROVIDER setting.
+    Creates the Groq LLM client.
     Called once at startup by the singleton.
     """
-    provider = settings.llm_provider.lower().strip()
-
-    if provider == "openai":
-        from app.engines.llm.openai_provider import OpenAIProvider
-        logger.info("Creating OpenAI provider")
-        return OpenAIProvider()
-
-    elif provider == "ollama":
-        from app.engines.llm.ollama_provider import OllamaProvider
-        logger.info("Creating Ollama provider", base_url=settings.ollama_base_url, model=settings.ollama_model)
-        return OllamaProvider()
-
-    elif provider == "gemini":
-        from app.engines.llm.gemini_provider import GeminiProvider
-        logger.info("Creating Gemini provider", model=settings.gemini_model)
-        return GeminiProvider()
-
-    elif provider == "groq":
-        from app.engines.llm.groq_provider import GroqProvider
-        logger.info("Creating Groq provider", model=settings.groq_model)
-        return GroqProvider()
-
-    else:
-        raise ValueError(
-            f"Unknown LLM_PROVIDER: '{provider}'. "
-            f"Expected 'ollama', 'openai', 'gemini', or 'groq'."
-        )
+    from app.engines.llm.groq_provider import GroqProvider
+    logger.info("Creating Groq provider", model=settings.groq_model)
+    return GroqProvider()
 
 
 async def get_llm_client() -> LLMClient:

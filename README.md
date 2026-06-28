@@ -109,9 +109,9 @@ AccessPilot AI is a full-stack web application that automates web accessibility 
 │                        ↓                                     │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │              LLM Provider Layer                       │  │
-│  │   ┌──────────┐  ┌──────────┐  ┌──────────┐         │  │
-│  │   │  OpenAI  │  │   Groq   │  │  Gemini  │ Ollama  │  │
-│  │   └──────────┘  └──────────┘  └──────────┘         │  │
+│  │                    ┌──────────┐                       │  │
+│  │                    │   Groq   │                       │  │
+│  │                    └──────────┘                       │  │
 │  └──────────────────────────────────────────────────────┘  │
 └───────────────────────┬─────────────────────────────────────┘
                         │
@@ -134,7 +134,7 @@ AccessPilot AI is a full-stack web application that automates web accessibility 
 - **Database**: PostgreSQL 16 + SQLAlchemy 2.0 (async)
 - **Migrations**: Alembic
 - **Authentication**: JWT (python-jose) + bcrypt (passlib)
-- **AI/LLM**: OpenAI API, Groq, Google Gemini, Ollama
+- **AI/LLM**: Groq (Llama 3.3 70B)
 - **Browser Automation**: Playwright + axe-core
 - **PDF Generation**: ReportLab
 - **Logging**: Structlog (JSON logging)
@@ -178,10 +178,7 @@ AccessPilot-AI/
 │   │       ├── base.py          # Abstract LLM client
 │   │       ├── factory.py       # Provider factory
 │   │       ├── models.py        # Response dataclasses
-│   │       ├── openai_provider.py
-│   │       ├── groq_provider.py
-│   │       ├── gemini_provider.py
-│   │       └── ollama_provider.py
+│   │       └── groq_provider.py
 │   ├── models/                   # SQLAlchemy ORM models
 │   │   ├── user.py
 │   │   ├── project.py
@@ -352,27 +349,13 @@ JWT_ACCESS_TOKEN_EXPIRE_MINUTES=60
 JWT_REFRESH_TOKEN_EXPIRE_DAYS=7
 ```
 
-### LLM Provider (choose one)
+### LLM Provider: Groq
 ```env
-# Option 1: OpenAI (paid, high quality)
-LLM_PROVIDER=openai
-OPENAI_API_KEY=sk-your-openai-api-key
-OPENAI_MODEL=gpt-4o
-
-# Option 2: Groq (free, fast)
+# AccessPilot AI uses Groq for AI-powered accessibility analysis
+# Get your free API key at: https://console.groq.com/keys
 LLM_PROVIDER=groq
-GROQ_API_KEY=gsk-your-groq-api-key
+GROQ_API_KEY=your-groq-api-key
 GROQ_MODEL=llama-3.3-70b-versatile
-
-# Option 3: Gemini (free tier available)
-LLM_PROVIDER=gemini
-GEMINI_API_KEY=your-gemini-api-key
-GEMINI_MODEL=gemini-2.0-flash
-
-# Option 4: Ollama (local, free)
-LLM_PROVIDER=ollama
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=llama3
 ```
 
 ### Crawler
@@ -537,14 +520,17 @@ Step 8: Mark Audit as COMPLETED
 
 **Result**: 66 violations → ~10-15 LLM calls (90% reduction)
 
-### Supported LLM Providers
+### AI Provider: Groq
 
-| Provider | Cost | Speed | Quality | Best For |
-|----------|------|-------|---------|----------|
-| **OpenAI** | Paid | Fast | ⭐⭐⭐⭐⭐ | Production |
-| **Groq** | Free | Very Fast | ⭐⭐⭐⭐ | Development |
-| **Gemini** | Free tier | Fast | ⭐⭐⭐⭐ | Development |
-| **Ollama** | Free | Slow | ⭐⭐⭐ | Offline |
+AccessPilot AI uses **Groq** as its AI provider for generating accessibility explanations, fix suggestions, and disability simulations.
+
+**Why Groq?**
+- **Free tier available** - No credit card required
+- **Very fast inference** - Optimized for low latency
+- **High quality** - Powered by Llama 3.3 70B model
+- **Easy setup** - Get API key in minutes at https://console.groq.com/keys
+
+**Model:** `llama-3.3-70b-versatile`
 
 ---
 
@@ -664,7 +650,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [FastAPI](https://fastapi.tiangolo.com/) - Modern Python web framework
 - [React](https://react.dev/) - UI library
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
-- All AI providers: OpenAI, Groq, Google Gemini, Ollama
+- Groq - AI provider for accessibility analysis
 
 ---
 

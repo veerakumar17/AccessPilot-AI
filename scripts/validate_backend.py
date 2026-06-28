@@ -56,7 +56,7 @@ async def main():
 
         # Check critical vars
         missing_keys = []
-        for key in ["DATABASE_URL", "OPENAI_API_KEY", "SECRET_KEY"]:
+        for key in ["DATABASE_URL", "GROQ_API_KEY", "SECRET_KEY"]:
             if key not in env_content:
                 missing_keys.append(key)
         if missing_keys:
@@ -155,27 +155,27 @@ async def main():
     except Exception as e:
         log_check(4, "FastAPI app creation", "FAIL", f"  Error: {e}\n{traceback.format_exc()}")
 
-    # ── Step 5: Verify OpenAI client initialization ───────────────
-    print_header("STEP 5: OpenAI Client")
+    # ── Step 5: Verify Groq client initialization ──────────────────
+    print_header("STEP 5: Groq LLM Client")
 
     try:
-        from app.engines.openai_client import get_openai_client, OpenAIClient, OpenAIException
+        from app.engines.llm.factory import get_llm_client
         from app.config import get_settings
         s = get_settings()
         
-        if s.openai_api_key and s.openai_api_key != "sk-your-openai-api-key":
-            log_check(5, "OPENAI_API_KEY configured", "PASS", f"  Model: {s.openai_model}")
+        if s.groq_api_key and s.groq_api_key != "":
+            log_check(5, "GROQ_API_KEY configured", "PASS", f"  Model: {s.groq_model}")
             
             try:
-                client = await get_openai_client()
-                log_check(5, "OpenAI client instantiated", "PASS", f"  Singleton: {type(client).__name__}")
-            except OpenAIException as e:
-                log_check(5, "OpenAI client instantiated", "FAIL", f"  Error: {e}")
+                client = await get_llm_client()
+                log_check(5, "Groq client instantiated", "PASS", f"  Singleton: {type(client).__name__}")
+            except Exception as e:
+                log_check(5, "Groq client instantiated", "FAIL", f"  Error: {e}")
         else:
-            log_check(5, "OPENAI_API_KEY configured", "WARN",
-                      "  No real API key set. Using placeholder. Set OPENAI_API_KEY in .env for live testing.")
+            log_check(5, "GROQ_API_KEY configured", "WARN",
+                      "  No real API key set. Using placeholder. Set GROQ_API_KEY in .env for live testing.")
     except Exception as e:
-        log_check(5, "OpenAI module import", "FAIL", f"  Error: {e}")
+        log_check(5, "Groq module import", "FAIL", f"  Error: {e}")
 
     # ── Step 6: Verify audit creation endpoint (import chain) ─────
     print_header("STEP 6: Audit Service / Pipeline Import Chain")
@@ -247,7 +247,7 @@ async def main():
     engines = [
         ("app.engines.playwright_engine", "PlaywrightEngine"),
         ("app.engines.axe_engine", "AxeEngine"),
-        ("app.engines.openai_client", "OpenAIClient"),
+        ("app.engines.llm.groq_provider", "GroqProvider"),
     ]
     for module_path, class_name in engines:
         try:
